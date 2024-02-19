@@ -190,6 +190,8 @@ GEM
     public_suffix (5.0.4)
     puma (6.4.2)
       nio4r (~> 2.0)
+    pundit (2.3.1)
+      activesupport (>= 3.0.0)
     racc (1.7.3)
     rack (3.0.9)
     rack-session (2.0.0)
@@ -257,6 +259,10 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    simple_token_authentication (1.18.1)
+      actionmailer (>= 3.2.6, < 8)
+      actionpack (>= 3.2.6, < 8)
+      devise (>= 3.2, < 6)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -314,11 +320,13 @@ DEPENDENCIES
   jbuilder
   pg (~> 1.1)
   puma (>= 5.0)
+  pundit
   rails (~> 7.1.3)
   redis (>= 4.0.1)
   sassc-rails
   selenium-webdriver
   simple_form!
+  simple_token_authentication
   sprockets-rails
   stimulus-rails
   turbo-rails
