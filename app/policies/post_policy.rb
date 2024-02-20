@@ -1,10 +1,12 @@
 class PostPolicy < ApplicationPolicy
   class Scope < Scope
     # NOTE: Be explicit about which records you allow access to!
-
+    # This will set the general scope of the all the actions,
+    # - Either anyone can have access
+    # - Either only the user who can access to their related posts.
     def resolve
-      scope.all
-      # scope.where(user: user)
+      # scope.all
+      scope.where(user: user)
     end
   end
 
@@ -22,7 +24,10 @@ class PostPolicy < ApplicationPolicy
 
   def update?
     @record.user == @user
-    # true
+  end
+
+  def destroy?
+    @record.user == @user
   end
 
 end
