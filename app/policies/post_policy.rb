@@ -5,8 +5,8 @@ class PostPolicy < ApplicationPolicy
     # - Either anyone can have access
     # - Either only the user who can access to their related posts.
     def resolve
-      # scope.all
-      scope.where(user: user)
+      scope.all
+      # scope.where(user: user)
     end
   end
 

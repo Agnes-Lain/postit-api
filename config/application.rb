@@ -21,6 +21,18 @@ module PostitApi
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w(assets tasks))
 
+    # setup for rack-cors
+    # config.middleware.insert_before 0, Rack::Cors do
+    #   allow do
+    #     origins "*"
+
+    #     resource "*",
+    #       headers: :any,
+    #       methods: [:get, :post, :put, :patch, :delete, :options, :head]
+    #       # credentials: true,
+    #       # max_age: 86400
+    #   end
+    # end
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

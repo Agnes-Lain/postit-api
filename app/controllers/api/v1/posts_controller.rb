@@ -1,12 +1,18 @@
 class Api::V1::PostsController < Api::V1::BaseController
 
-  acts_as_token_authentication_handler_for User
+  acts_as_token_authentication_handler_for User, except: [:index]
+
+  skip_before_action :authenticate_user!, only: :index
+  skip_after_action :verify_authorized, only: :index
+
   before_action :set_post, only: [ :show, :update, :destroy]
 
   def index
     # @posts = Post.where(user: current_user)
     # authorize @posts
-    @posts = policy_scope(Post)
+    @posts = policy_scope(Post.order(:id))
+    # @posts = Post.order(:id)
+    # skip_authorization
   end
 
   def show
