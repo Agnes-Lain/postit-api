@@ -1,16 +1,20 @@
 class Api::V1::PostsController < Api::V1::BaseController
 
-  acts_as_token_authentication_handler_for User, except: [:index]
+  # acts_as_token_authentication_handler_for User, except: [:index]
 
-  skip_before_action :authenticate_user!, only: :index
-  skip_after_action :verify_authorized, only: :index
+  skip_before_action :verify_authenticity_token, raise: false
+  before_action :authenticate_devise_api_token!
+  # , only: [:restricted]
+
+  # skip_before_action :authenticate_user!, only: :index
+  # skip_after_action :verify_authorized, only: :index
 
   before_action :set_post, only: [ :show, :update, :destroy]
 
   def index
-    # @posts = Post.where(user: current_user)
-    # authorize @posts
-    @posts = policy_scope(Post.order(:id))
+    @posts = Post.where(user: current_devise_api_user)
+    authorize @posts
+    # @posts = policy_scope(Post.order(:id))
     # @posts = Post.order(:id)
     # skip_authorization
   end
@@ -28,7 +32,7 @@ class Api::V1::PostsController < Api::V1::BaseController
 
   def create
     @post = Post.new(post_params)
-    @post.user = current_user
+    @post.user = current_api_v1_user
     authorize @post
     if @post.save
       render :show, status: :created
@@ -45,7 +49,8 @@ class Api::V1::PostsController < Api::V1::BaseController
   private
 
   def set_post
-    @post = Post.find(params[:id])
+    devise_api_token = current_devise_api_token
+    @post = devise_api_token.resource_owner.posts.find(params[:id])
     authorize @post  # For Pundit
   end
 
@@ -56,5 +61,14 @@ class Api::V1::PostsController < Api::V1::BaseController
   def render_error
     render json: { errors: @post.errors.full_messages },
       status: :unprocessable_entity
+  end
+
+  def restricted
+    devise_api_token = current_devise_api_token
+    if devise_api_token
+      render json: { message: "You are logged in" }, status: :ok
+    else
+      render json: { message: "You are not logged in" }, status: :unauthorized
+    end
   end
 end

@@ -5,8 +5,10 @@ class Api::V1::BaseController < ActionController::API
   # skip_before_action :authenticate_user!, only: [:home]
 
   after_action :verify_authorized, except: :index
-  after_action :verify_policy_scoped, only: :index
+  # after_action :verify_policy_scoped, only: :index
   before_action :authenticate_user!, except: :index
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
 
   rescue_from Pundit::NotAuthorizedError,   with: :user_not_authorized
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
@@ -22,5 +24,12 @@ class Api::V1::BaseController < ActionController::API
   def not_found(exception)
     render json: { error: exception.message }, status: :not_found
   end
+
+  protected
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:user_name, :token])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:user_name, :token])
+  end
+
 
 end

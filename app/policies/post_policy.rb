@@ -6,7 +6,7 @@ class PostPolicy < ApplicationPolicy
     # - Either only the user who can access to their related posts.
     def resolve
       scope.all
-      # scope.where(user: user)
+      # scope.where(user: current_devise_api_user)
     end
   end
 
