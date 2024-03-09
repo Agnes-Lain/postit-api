@@ -19,8 +19,8 @@ class Api::V1::PostsController < Api::V1::BaseController
     # skip_authorization
   end
 
-  def show
-  end
+  # def show
+  # end
 
   def update
     if @post.update(post_params)
@@ -32,7 +32,7 @@ class Api::V1::PostsController < Api::V1::BaseController
 
   def create
     @post = Post.new(post_params)
-    @post.user = current_api_v1_user
+    @post.user = current_devise_api_user
     authorize @post
     if @post.save
       render :show, status: :created
@@ -63,12 +63,4 @@ class Api::V1::PostsController < Api::V1::BaseController
       status: :unprocessable_entity
   end
 
-  def restricted
-    devise_api_token = current_devise_api_token
-    if devise_api_token
-      render json: { message: "You are logged in" }, status: :ok
-    else
-      render json: { message: "You are not logged in" }, status: :unauthorized
-    end
-  end
 end
