@@ -6,7 +6,9 @@ class Api::V1::BaseController < ActionController::API
 
   after_action :verify_authorized, except: :index
   # after_action :verify_policy_scoped, only: :index
-  before_action :authenticate_user!, except: :index
+  # before_action :authenticate_user!, except: :index
+  before_action :authenticate_devise_api_token!
+  skip_before_action :verify_authenticity_token, raise: false
   before_action :configure_permitted_parameters, if: :devise_controller?
 
 
@@ -27,8 +29,9 @@ class Api::V1::BaseController < ActionController::API
 
   protected
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:user_name, :token])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:user_name, :token])
+    attributes = [:email, :password, user_name]
+    devise_parameter_sanitizer.permit(:sign_up, keys: attributes)
+    devise_parameter_sanitizer.permit(:account_update, keys: attributes)
   end
 
 

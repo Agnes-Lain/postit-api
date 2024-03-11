@@ -79,3 +79,5 @@ group :test do
 end
 
 gem "devise-api", "~> 0.1.3"
+
+gem "byebug"

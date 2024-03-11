@@ -2,8 +2,8 @@ class Api::V1::PostsController < Api::V1::BaseController
 
   # acts_as_token_authentication_handler_for User, except: [:index]
 
-  skip_before_action :verify_authenticity_token, raise: false
-  before_action :authenticate_devise_api_token!
+  # skip_before_action :verify_authenticity_token, raise: false
+  # before_action :authenticate_devise_api_token!
   # , only: [:restricted]
 
   # skip_before_action :authenticate_user!, only: :index
@@ -31,6 +31,7 @@ class Api::V1::PostsController < Api::V1::BaseController
   end
 
   def create
+    # byebug
     @post = Post.new(post_params)
     @post.user = current_devise_api_user
     authorize @post
@@ -49,6 +50,7 @@ class Api::V1::PostsController < Api::V1::BaseController
   private
 
   def set_post
+    # byebug
     devise_api_token = current_devise_api_token
     @post = devise_api_token.resource_owner.posts.find(params[:id])
     authorize @post  # For Pundit

@@ -5,8 +5,8 @@ class PostPolicy < ApplicationPolicy
     # - Either anyone can have access
     # - Either only the user who can access to their related posts.
     def resolve
-      scope.all
-      # scope.where(user: current_devise_api_user)
+      # scope.all
+      scope.where(user: current_devise_api_user)
     end
   end
 
@@ -23,11 +23,12 @@ class PostPolicy < ApplicationPolicy
   end
 
   def update?
-    @record.user == @user
+    @record.user == @current_devise_api_user
   end
 
   def destroy?
-    @record.user == @user
+    # @record.user == @current_devise_api_user
+    true
   end
 
 end
